@@ -185,6 +185,8 @@ mc.world.afterEvents.entityDie.subscribe(ev => {
         death[1] = ev.deadEntity.location
         death[2] = ev.deadEntity.dimension.id
         death[3] = ev.damageSource.cause
+        if (ev.damageSource.damagingEntity) death[4] = ["Entity", ev.damageSource.damagingEntity.typeId]
+        if (ev.damageSource.damagingProjectile) death[death.length] = ["Projectile", ev.damageSource.damagingProjectile.typeId]
 
         pdata[2].push(death)
         wdata[i] = pdata
@@ -337,10 +339,13 @@ mc.world.beforeEvents.itemUse.subscribe(ev => {
                             `Cause: §l${formatDeathCause(death[3], ev.source)}§r\n` +
                             `Position: ${vector}\n` +
                             `Dimension: §l${getDimension(death[2], ev.source)[0]}§r\n` +
-                            `Time happened: §l${formatTime(death[0], ev.source)}§r`
+                            `Time happened: §l${formatTime(death[0], ev.source)}§r\n` +
+                            (death.length > 4 ? "===== Extra Information ====\n" : "") +
+                            (death.length == 5 ? `${death[4][0]}: §l${death[4][1]}§r\n` : "") +
+                            (death.length == 6 ? `${death[5][0]}: §l${death[5][1]}§r` : "")
                         )
                         .button("<Return>", "", () => deathlogs(player, page, callback))
-                        .button("<Print information>", "", () => {
+                        .button("<Print information>\n§lExtra info not included§r", "", () => {
                             ev.source.sendMessage(
                                 `Cause: §l${formatDeathCause(death[3], ev.source)}§r\n` +
                                 `Position: ${vector}\n` +
