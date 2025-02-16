@@ -1,13 +1,14 @@
-![Pack icon](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/pack_icon.png)
 # BedrockDeathLog
 > Version supported: v1.21 and above
 
-![Death logs](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/deathLogs.png)
+![Banner](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/Banner.png)
 
 A Bedrock add-on that logs and saves your last death position in any dimension you're in!
 - To start, **the add-on should be installed on your world** (obviously)
 - ...and **you need to rename an item first** (like a `Stick` or `Dirt` - your choice) to **`/bdl`**
 - Once you've renamed the item, you can then **right-click/hold down the item** to open up the **`BedrockDeathLog`** menu
+
+![Death logs](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/deathLogs.png)
 
 ## `BedrockDeathLog` menu
 ![BedrockDeathLog menu](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/bedrockDeathLogMenu.png)
