@@ -214,7 +214,7 @@ mc.world.beforeEvents.itemUse.subscribe(ev => {
         function menu() {
             const pdata = getData(ev.source)[0]
             new ActionFormHelper()
-            .title("DeathLog §lv1.0.0§r")
+            .title("BedrockDeathLog")
             .body(
                 `${ev.source.name}\n§l[${ev.source.id}]§r\n` +
                 "==================\n"+
