@@ -200,7 +200,7 @@ mc.world.afterEvents.playerSpawn.subscribe(ev => {
     if (!ev.initialSpawn && getData(ev.player)[0][5].logDeath) {
         const lastdeath = getData(ev.player)[0][2][getData(ev.player)[0][2].length-1]
         ev.player.sendMessage(
-            `Your last death was at ${formatVector3(lastdeath[1], ev.player)}`
+            `Your last death was at ${formatVector3(lastdeath[1], ev.player)} (${getDimension(lastdeath[2], ev.player)[0]})`
         )
     }
 })
