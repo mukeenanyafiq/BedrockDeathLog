@@ -340,7 +340,7 @@ mc.world.beforeEvents.itemUse.subscribe(ev => {
                             `Position: ${vector}\n` +
                             `Dimension: §l${getDimension(death[2], ev.source)[0]}§r\n` +
                             `Time happened: §l${formatTime(death[0], ev.source)}§r\n` +
-                            (death.length > 4 ? "===== Extra Information ====\n" : "") +
+                            (death.length > 4 ? "\n===== Extra Information ====\n" : "") +
                             (death.length == 5 ? `${death[4][0]}: §l${death[4][1]}§r\n` : "") +
                             (death.length == 6 ? `${death[5][0]}: §l${death[5][1]}§r` : "")
                         )
