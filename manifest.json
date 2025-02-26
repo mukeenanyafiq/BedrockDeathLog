@@ -1,25 +1,25 @@
 {
 	"format_version": 2,
 	"header": {
-		"name": "BedrockDeathLog",
-		"description": "Logs and saves your last death position in any dimension you're in!\n§lRename an item to /bdl to open DeathLog!§r",
-		"min_engine_version": [1, 21, 0],
+		"name": "BedrockDeathLog [B]",
+		"description": "Logs and saves your last death position in any dimension you're in!\n§lRename an item to /bdl or type !bdl in chat to open DeathLog!§r",
+		"min_engine_version": [1, 21, 60],
 		"uuid": "1e3b5863-b045-461a-84ad-b3a79ff35d6f",
-		"version": [1, 0, 0]
+		"version": [1, 0, 60]
 	},
 	"modules": [
         {
             "type": "script",
             "language": "javascript",
 			"uuid": "01af0969-a1c5-4463-97bd-be2f85ac23de",
-            "version": [1, 0, 0],
+            "version": [1, 0, 60],
             "entry": "scripts/index.js"
         }
     ],
     "dependencies": [
 		{
 			"module_name": "@minecraft/server",
-			"version": "1.11.0"
+			"version": "1.18.0-beta"
 		},
 		{
 			"module_name": "@minecraft/server-ui",
