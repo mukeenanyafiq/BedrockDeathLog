@@ -220,7 +220,7 @@ mc.world.beforeEvents.chatSend.subscribe(ev => {
             menu(ev.sender)    
         break;
     
-        case "!admin":
+        case "!bdladmin":
             if (ev.sender.isOp()) {
                 ev.cancel = true
                 admin(ev.sender)
