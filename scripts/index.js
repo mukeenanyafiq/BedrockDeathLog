@@ -1,5 +1,7 @@
 import * as mc from "@minecraft/server"
 import { menu, admin } from "./form"
+import MCRange from "./variables/MCRange"
+import MCNumber from "./variables/MCNumber"
 
 const id = "bdeathlog:data"
 const data = {

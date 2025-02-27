@@ -232,11 +232,16 @@ function access(player) {
 export function admin(player) {
     if (!player.isOp()) { return player.sendMessage("§l[BedrockDeathLog]§r Unauthorized access attemption with no operator-level permission") }
 
-    const f = new ActionFormHelper()
-    .title("BedrockDeathLog AdminMenu")
-    .body("Monitor and manage everything")
-    .button("<View all players deathlog>", "", () => {
-        const access = getWorldData()
+    function adminmenu() {
+        const fa = new ActionFormHelper()
+        .title("BedrockDeathLog AdminMenu")
+        .body("Monitor and manage everything")
+        .button("<View all players deathlog>", "", () => viewdeathlogs())
+        .show(player)
+    }
+
+    function viewdeathlogs() {
+        const access = getWorldData().filter(val => val[0] == player.id);
         if (access.length < 1) { return player.sendMessage("§l[BedrockDeathLog]§r No... thing? We can't find a single player's data.") }
         const f = new ActionFormHelper()
         .title("Player Deathlogs")
@@ -246,10 +251,9 @@ export function admin(player) {
         )
         .button("<Return>", "", () => menu())
         .button(`Your deathlogs\n§l[${player.id}]§r`, "", () => { deathlog(player, 1) })
-        for (const pl of access) { f.button(`${pl[1]}\n§l[${pl[0]}]§r`, "", () => { deathlogs({ name: pl[1], id: pl[0] }, 1) }) }
+        for (const pl of access) { f.button(`${pl[1]}\n§l[${pl[0]}]§r`, "", () => { deathlog({ name: pl[1], id: pl[0] }, 1) }) }
         f.show(player)
-    })
-    .show(player)
+    }
 
     function deathlog(target, page) {
         const pdata = getData(target)[0]
@@ -264,7 +268,7 @@ export function admin(player) {
                 `Showing page §l${page} §r/§l ${pagecount}§r\n( §l${pdata[2].length} death(s)§r in total )`
             )
         )
-        .button("<Return>", "", () => { f.show(player) })
+        .button("<Return>", "", () => viewdeathlogs())
         if (pagecount > page) { f.button("<Next Page>", "", () => deathlog(target, page+1)) }
         if (page > 1) { f.button("<Previous Page>", "", () => deathlog(target, page-1)) }
         slice.forEach((death, i) => {
@@ -297,4 +301,6 @@ export function admin(player) {
         });
         f.show(player)
     }
+
+    adminmenu()
 }
