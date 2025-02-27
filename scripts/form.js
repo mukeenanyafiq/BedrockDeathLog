@@ -76,7 +76,7 @@ export function menu(player) {
         f.show(player)
     })
     .button("<Access Settings>", "", () => access())
-    .show(player)
+    .show(player, true)
 }
 
 // Player deathlogs
@@ -237,7 +237,7 @@ export function admin(player) {
         .title("BedrockDeathLog AdminMenu")
         .body("Monitor and manage everything")
         .button("<View all players deathlog>", "", () => viewdeathlogs())
-        .show(player)
+        .show(player, true)
     }
 
     function viewdeathlogs() {
