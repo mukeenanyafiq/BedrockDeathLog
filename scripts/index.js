@@ -1,10 +1,8 @@
 import * as mc from "@minecraft/server"
-import { ModalFormData } from "@minecraft/server-ui"
-import ActionFormHelper from "./helper/ActionFormHelper"
-import MessageFormHelper from "./helper/MessageFormHelper"
 import MCRange from "./variables/MCRange"
 import MCNumber from "./variables/MCNumber"
 import * as menu from "./form/menu"
+import * as admin from "./form/admin"
 
 // Interfaces
 export const dataId = "bdeathlog:data"
@@ -146,14 +144,14 @@ export function getData(player, beautifier) {
     if (!playerData) {
         playerData = [ ...minifiedData ]
         playerData[0] = player.id
-        playerData[1] = player.name
-
+        
         worldData.push(playerData)
         mc.world.setDynamicProperty(dataId, JSON.stringify(worldData))
     }
 
-    let beautiful = {}
+    if (playerData[1] !== player.name) playerData[1] = player.name
 
+    let beautiful = {}
     if (beautifier) { playerData.forEach((v, i) => { beautiful[Object.keys(playerData)[i]] = v }) }
 
     return [beautifier ? beautiful : playerData, i]
@@ -261,6 +259,24 @@ mc.world.beforeEvents.itemUse.subscribe(ev => {
 
     // Open the menu form
     menu.showForm(ev.source);
+})
+
+mc.world.beforeEvents.chatSend.subscribe(ev => {
+    switch (ev.message.toLowerCase()) {
+        case "!bdl":
+            ev.cancel = true
+            ev.sender.sendMessage(`[Close the chat to open the form]`)
+            menu.showForm(ev.sender)    
+        break;
+    
+        case "!bdladmin":
+            if (ev.sender.playerPermissionLevel === mc.PlayerPermissionLevel.Operator) {
+                ev.cancel = true
+                ev.sender.sendMessage(`[Close the chat to open the admin form]`)
+                admin.admin(ev.sender)
+            }
+        break;
+    }
 })
 
 // Custom set scriptevent

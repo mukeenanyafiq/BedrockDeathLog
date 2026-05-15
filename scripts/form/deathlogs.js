@@ -5,7 +5,7 @@ import ModalFormHelper from "../helper/ModalFormHelper"
 import * as menu from "./menu"
 
 // Deathlogs
-export function deathlogs(player, targetPlayer, page, callback) {
+export function deathlogs(player, targetPlayer, page, callback, operator) {
     if (typeof page !== "number") { page = 1 }
 
     // Gets the source player's data and the target player's data
@@ -13,7 +13,7 @@ export function deathlogs(player, targetPlayer, page, callback) {
     const targetPlayerData = getData(targetPlayer)[0]
 
     // If the target player is not the same as the source player, check for permissions.
-    if (targetPlayer.id != player.id && targetPlayerData) {
+    if (!operator && targetPlayer.id !== player.id && targetPlayerData) {
         if (
             targetPlayerData[6] === ACCESS_TYPE.ACCESS_ONLY && !targetPlayerData[3].includes(player.id) ||
             targetPlayerData[6] === ACCESS_TYPE.EVERYONE && targetPlayerData[4].includes(player.id)
@@ -28,7 +28,7 @@ export function deathlogs(player, targetPlayer, page, callback) {
     const slice = plDeathlogs.slice((page - 1) * playerData[5].listPerPage, page * playerData[5].listPerPage)
 
     const form = new ActionFormHelper()
-    .title(`${targetPlayer.name} Deathlogs`)
+    .title(`${targetPlayer.name} deathlogs`)
     .body(
         `${targetPlayer.name}\n§l[${targetPlayer.id}]§r\n\n` +
         (targetPlayerData[2].length < 1 ? `${targetPlayer.id === player.id ? "You" : "They"} haven't even died yet. Nice.` : 
