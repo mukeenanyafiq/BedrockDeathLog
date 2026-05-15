@@ -1,6 +1,8 @@
 import { Player, system } from "@minecraft/server";
 import { MessageFormData } from "@minecraft/server-ui";
 
+const dtimeout = 20 * 5
+
 export default class MessageFormHelper {
     constructor() {
         this.form = new MessageFormData()
@@ -32,15 +34,13 @@ export default class MessageFormHelper {
      * @param {function} callback 
      * @returns 
      */
-    button1(text, callback) {
+    button1(text, callback) {        
         /**
          * `[text, callback]`
          */
-        this.button2A = [text]
+        this.button1A = [text]
 
-        if (typeof callback != "function") return this;
-        this.button2A[1] = callback
-        
+        if (typeof callback === "function") { this.button1A[1] = callback }
         return this
     }
 
@@ -54,11 +54,9 @@ export default class MessageFormHelper {
         /**
          * `[text, callback]`
          */
-        this.button1A = [text]
+        this.button2A = [text]
 
-        if (typeof callback != "function") return this;
-        this.button1A[1] = callback
-        
+        if (typeof callback === "function") { this.button2A[1] = callback }
         return this
     }
     
@@ -69,10 +67,10 @@ export default class MessageFormHelper {
      * @param {Player} player Player to show this dialog to
      * @param {boolean} force Forces the form to open if the user is still busy until the user no longer busy
      * @param {function} callback Function to run if the form were closed (UserClosed)
-     * @returns 
+     * @returns {Promise<MessageFormResponse>}
      */
     show(player, force = false, callback = () => {}) {
-        // Create the form elements
+        // Create the form elements and parse its text
         this.form.title(this.titleT)
         this.form.body(this.bodyT)
         this.form.button1(this.button1A[0])
@@ -82,23 +80,21 @@ export default class MessageFormHelper {
         
         return new Promise(resolve => {
             system.run(async function runnable() {
-                const response = await tthis.form.show( player )
-                const {selection, canceled, cancelationReason} = response
+                const res = await tthis.form.show( player )
                 
-                if (canceled) {
-                    if (force && cancelationReason == "UserBusy") { system.run(runnable); return }
-                    callback(cancelationReason)
-                    return
+                if (res.canceled) {
+                    if (force && res.cancelationReason == "UserBusy") { return system.run(runnable) }
+                    return callback(res.cancelationReason)   
                 }
                 
                 const handler = tthis[`button${selection+1}A`]
                 
                 if (handler) {
-                    try { handler[1](response) } 
+                    try { handler[1](res) }
                     catch (error) { console.error( error, error.stack ) }
                 }
                 
-                resolve(response)
+                resolve(res)
             })
         })
     }

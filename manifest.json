@@ -3,9 +3,9 @@
 	"header": {
 		"name": "BedrockDeathLog",
 		"description": "Logs and saves your last death position in any dimension you're in!\n§lRename an item to /bdl to open DeathLog!§r",
-		"min_engine_version": [1, 21, 0],
+		"min_engine_version": [1, 26, 0],
 		"uuid": "1e3b5863-b045-461a-84ad-b3a79ff35d6f",
-		"version": [1, 0, 0]
+		"version": [1, 1, 0]
 	},
 	"modules": [
         {
@@ -19,11 +19,11 @@
     "dependencies": [
 		{
 			"module_name": "@minecraft/server",
-			"version": "1.11.0"
+			"version": "2.7.0"
 		},
 		{
 			"module_name": "@minecraft/server-ui",
-			"version": "1.2.0"
+			"version": "2.0.0"
 		}
     ]
 }
