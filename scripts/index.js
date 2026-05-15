@@ -120,7 +120,6 @@ export const deathTypes = {
     "stalagmite": "Impaled on stalagmite",
     "starve": "Starved to death",
     "suffocation": "Suffocated",
-    "suicide": "Took their own life",
     "temperature": "Died from unstable temperature",
     "thorns": "Killed by thorns",
     "void": "Fell into the Void",

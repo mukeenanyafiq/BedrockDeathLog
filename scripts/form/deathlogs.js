@@ -30,8 +30,9 @@ export function deathlogs(player, targetPlayer, page, callback) {
     const form = new ActionFormHelper()
     .title(`${targetPlayer.name} Deathlogs`)
     .body(
-        targetPlayerData[2].length < 1 ? `${targetPlayer.id === player.id ? "You" : "They"} haven't even died yet. Nice.` : 
-        `Showing page §l${page} §r/§l ${pageCount}§r\n( §l${targetPlayerData[2].length} death(s)§r in total )`
+        `${targetPlayer.name}\n§l[${targetPlayer.id}]§r\n\n` +
+        (targetPlayerData[2].length < 1 ? `${targetPlayer.id === player.id ? "You" : "They"} haven't even died yet. Nice.` : 
+        `Showing page §l${page} §r/§l ${pageCount}§r\n( §l${targetPlayerData[2].length} death(s)§r in total )`)
     )
     .button("<Return>", "", () => callback())
     if (pageCount > page) { form.button("<Next Page>", "", () => deathlogs(player, targetPlayer, page + 1, callback)) }
@@ -100,7 +101,7 @@ export function playerDeathlogs(player) {
     .button("<Return>", "", () => menu.showForm(player))
     .button(`Your deathlogs\n§l[${player.id}]§r`, "", () => { deathlogs(player, player, 1, () => playerDeathlogs(player)) })
     for (const pl of accessable) {
-        form.button(`${pl[1]}\n§l[${pl[0]}]§r`, "", () => { deathlogs(player, { name: pl[1], id: pl[0] }, 1, () => playerDeathlogs(player)) })
+        form.button(`${pl[1]}\n§l[${pl[2].length} death(s)]§r`, "", () => { deathlogs(player, { name: pl[1], id: pl[0] }, 1, () => playerDeathlogs(player)) })
     }
 
     form.show(player)
