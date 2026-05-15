@@ -1,12 +1,15 @@
 import { Player, system } from "@minecraft/server"
-import { ActionFormData } from "@minecraft/server-ui"
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui"
+
+const dtimeout = 20 * 5
 
 /**
- * Easier button callback handling
+ * Easier button callback handling and text formatting
  */
 export default class ActionFormHelper {
     constructor() {
         this.form = new ActionFormData()
+        /** @type {[string, string?, () => void?]} */
         this.buttons = []
     }
     
@@ -38,11 +41,11 @@ export default class ActionFormHelper {
      * @returns 
      */
     button(text, iconPath, callback) {
-        this.buttons.push([text, iconPath])
-
-        if (typeof callback != "function") return this;
-        this.buttons[this.buttons.length - 1].push(callback)
+        let button = [text, iconPath]
         
+        if (typeof callback === "function") { button.push(callback) }
+        this.buttons.push(button)
+
         return this
     }
     
@@ -53,35 +56,33 @@ export default class ActionFormHelper {
      * @param {Player} player Player to show this dialog to
      * @param {boolean} force Forces the form to open if the user is still busy until the user no longer busy
      * @param {function} callback Function to run if the form were closed (UserClosed)
-     * @returns 
+     * @returns {Promise<ActionFormResponse>}
      */
     show(player, force = false, callback = () => {}) {
-        // Create the form elements
+        // Create the form elements and parse its text
         this.form.title(this.titleT)
         this.form.body(this.bodyT)
         this.buttons.forEach(el => this.form.button(el[0], el[1]))
-
-        const tthis = this
         
+        const tthis = this
+
         return new Promise(resolve => {
             system.run(async function runnable() {
-                const response = await tthis.form.show( player )
-                const {selection, canceled, cancelationReason} = response
+                const res = await tthis.form.show( player )
                 
-                if (canceled) {
-                    if (force && cancelationReason == "UserBusy") { system.run(runnable); return }
-                    callback(cancelationReason)
-                    return
+                if (res.canceled) {
+                    if (force && res.cancelationReason == "UserBusy") { return system.run(runnable) }
+                    return callback(res.cancelationReason)
                 }
                 
-                const handler = tthis.buttons[selection]
+                const handler = tthis.buttons[res.selection]
                 
                 if (handler && handler[2]) {
-                    try { handler[2](response) } 
+                    try { handler[2](res) } 
                     catch (error) { console.error( error, error.stack ) }
                 }
                 
-                resolve(response)
+                resolve(res)
             })
         })
     }
