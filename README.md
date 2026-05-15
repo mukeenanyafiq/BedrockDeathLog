@@ -1,5 +1,5 @@
 # BedrockDeathLog
-> Version supported: v1.21 and above
+> Version supported: v26.0 and above
 
 ![Banner](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/Banner.png)
 
@@ -29,7 +29,7 @@ You can also add/remove a player to an `exception of who can't see your deathlog
 - Double-click/Open the **.mcpack** to automatically install the add-on
 - *Manual installation:* Unzip the **.zip** file as a folder and move the folder to...<br>
 Android: `Android/data/com.mojang.minecraftpe/files/games/com.mojang/behavior_packs`<br>
-Windows: `%localappdata%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\behavior_packs`
+Windows: `%appdata%\Minecraft Bedrock\Users\Shared\games\com.mojang\behavior_packs`
 - Edit your world/Create new world and add **`BedrockDeathLog`** in the Behavior Packs section!
 
 ## For Beta API pack version:
