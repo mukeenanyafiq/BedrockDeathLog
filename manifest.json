@@ -3,7 +3,7 @@
 	"header": {
 		"name": "BedrockDeathLog [B]",
 		"description": "Logs and saves your last death position in any dimension you're in!\n§lRename an item to /bdl or type !bdl in chat to open DeathLog!§r",
-		"min_engine_version": [1, 26, 00],
+		"min_engine_version": [1, 26, 0],
 		"uuid": "1e3b5863-b045-461a-84ad-b3a79ff35d6f",
 		"version": [1, 0, 60]
 	},

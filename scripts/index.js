@@ -1,8 +1,8 @@
 import * as mc from "@minecraft/server"
-import { menu, admin } from "./form"
 import MCRange from "./variables/MCRange"
 import MCNumber from "./variables/MCNumber"
 import * as menu from "./form/menu"
+import * as admin from "./form/admin"
 
 // Interfaces
 export const dataId = "bdeathlog:data"
@@ -118,7 +118,6 @@ export const deathTypes = {
     "stalagmite": "Impaled on stalagmite",
     "starve": "Starved to death",
     "suffocation": "Suffocated",
-    "suicide": "Took their own life",
     "temperature": "Died from unstable temperature",
     "thorns": "Killed by thorns",
     "void": "Fell into the Void",
@@ -145,14 +144,14 @@ export function getData(player, beautifier) {
     if (!playerData) {
         playerData = [ ...minifiedData ]
         playerData[0] = player.id
-        playerData[1] = player.name
-
+        
         worldData.push(playerData)
         mc.world.setDynamicProperty(dataId, JSON.stringify(worldData))
     }
 
-    let beautiful = {}
+    if (playerData[1] !== player.name) playerData[1] = player.name
 
+    let beautiful = {}
     if (beautifier) { playerData.forEach((v, i) => { beautiful[Object.keys(playerData)[i]] = v }) }
 
     return [beautifier ? beautiful : playerData, i]
@@ -270,9 +269,9 @@ mc.world.beforeEvents.chatSend.subscribe(ev => {
         break;
     
         case "!bdladmin":
-            if (ev.sender.isOp()) {
+            if (ev.sender.playerPermissionLevel === mc.PlayerPermissionLevel.Operator) {
                 ev.cancel = true
-                admin(ev.sender)
+                admin.admin(ev.sender)
             }
         break;
     }
