@@ -265,12 +265,14 @@ mc.world.beforeEvents.chatSend.subscribe(ev => {
     switch (ev.message.toLowerCase()) {
         case "!bdl":
             ev.cancel = true
+            ev.sender.sendMessage(`[Close the chat to open the form]`)
             menu.showForm(ev.sender)    
         break;
     
         case "!bdladmin":
             if (ev.sender.playerPermissionLevel === mc.PlayerPermissionLevel.Operator) {
                 ev.cancel = true
+                ev.sender.sendMessage(`[Close the chat to open the admin form]`)
                 admin.admin(ev.sender)
             }
         break;
