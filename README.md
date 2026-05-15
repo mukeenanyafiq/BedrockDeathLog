@@ -45,7 +45,7 @@ Windows: `%localappdata%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalStat
 
 - Enable Beta APIs
 
-![Enabled Beta API in Experiments](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/enabledBetaAPIExperiments.png)
+![Enabled Beta API in Experiments](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/enabledBetaAPIExperiment.png)
 
 # DeathLog `scriptevent`
 For tech-nerds, there is a way to troubleshoot the add-on, if, somehow the game were bugging/glitching
