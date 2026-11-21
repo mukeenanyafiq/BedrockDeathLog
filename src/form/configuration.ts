@@ -1,17 +1,18 @@
 import { Player, world } from "@minecraft/server";
 import { DeathLogConfig } from "../types";
-import { dataId, configurations } from "../constants";
+import { dataId, configurations, chatPrefix } from "../constants";
 import { getData, getWorldData } from "../index";
 import ModalFormHelper from "../helper/ModalFormHelper";
-import * as menu from "./menu"
 import MCRange from "../variables/MCRange";
 import MCNumber from "../variables/MCNumber";
+import * as menu from "./menu"
 
-export function showForm(player: Player, defaultConfig: { [key: string]: any } = {}) {
+export function showForm(player: Player, defaultConfig?: { [key: string]: any }) {
     const [playerData, i] = getData(player);
     if (i === -1) return;
 
     const plConfig: any = playerData[5]
+    console.info(JSON.stringify(plConfig))
 
     const form = new ModalFormHelper()
     .title("Configure DeathLog")
@@ -43,7 +44,7 @@ export function showForm(player: Player, defaultConfig: { [key: string]: any } =
             if (configurations[configKey][1] instanceof MCNumber && (typeof formValues[i] !== "number" || isNaN(formValues[i]))) {
                 let cloneConfig: { [key: string]: any } = { ...playerData[5] }
 
-                formValues.forEach((val, i) => cloneConfig[configKey] = val)
+                formValues.forEach(val => cloneConfig[configKey] = val)
                 cloneConfig[configKey] = `${val} isn't a number!`
                 return showForm(player, cloneConfig);
             }
@@ -55,7 +56,7 @@ export function showForm(player: Player, defaultConfig: { [key: string]: any } =
         })
 
         worldData[i] = playerData
-        if (changed) { player.sendMessage("§l[BedrockDeathLog]§r Configuration changed") }
+        if (changed) { player.sendMessage(`${chatPrefix} Configuration changed`) }
         world.setDynamicProperty(dataId, JSON.stringify(worldData))
 
         menu.showForm(player)

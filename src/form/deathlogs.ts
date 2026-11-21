@@ -1,6 +1,6 @@
 import { Player, world } from "@minecraft/server"
 import { formatDeathCause, formatTime, formatVector3, getAccessableDeathlogs, getData, getDimension, getWorldData } from "../index"
-import { dataId, accessTypes } from "../constants"
+import { dataId, accessTypes, chatPrefix } from "../constants"
 import { Deathlog, HandsDownJustWhatsTakenFromPlayerObject } from "../types"
 import ActionFormHelper from "../helper/ActionFormHelper"
 import ModalFormHelper from "../helper/ModalFormHelper"
@@ -8,20 +8,23 @@ import MessageFormHelper from "../helper/MessageFormHelper"
 import * as menu from "./menu"
 
 // Deathlogs
-export function deathlogs(player: Player, targetPlayer: Player | HandsDownJustWhatsTakenFromPlayerObject, page: number, callback: () => void) {
+export function deathlogs(player: Player, targetPlayer: Player | HandsDownJustWhatsTakenFromPlayerObject, page: number = 1, callback: () => void) {
     if (typeof page !== "number") { page = 1 }
 
     // Gets the source player's data and the target player's data
-    const playerData = getData(player)[0]
+    const [playerData, i] = getData(player)
+    if (i === -1) return; // dont even bother :laugh:
+
     const [targetPlayerData, targetId] = getData(targetPlayer)
 
     // If the target player is not the same as the source player, check for permissions.
+
     if (targetPlayer.id !== player.id && targetId !== -1) {
         if (
             targetPlayerData[6] === accessTypes.ACCESS_ONLY && !targetPlayerData[3].includes(player.id) ||
             targetPlayerData[6] === accessTypes.EVERYONE && targetPlayerData[4].includes(player.id)
         ) {
-            if (player instanceof Player) player.sendMessage("§l[BedrockDeathLog]§r You don't have access to view the deathlogs.");
+            if (player instanceof Player) player.sendMessage(`${chatPrefix} You don't have access to view the deathlogs.`);
             return;
         }
     }
@@ -45,49 +48,35 @@ export function deathlogs(player: Player, targetPlayer: Player | HandsDownJustWh
     if (page > 1) { form.button("<Previous Page>", "", () => deathlogs(player, targetPlayer, page - 1, callback)) }
 
     slice.forEach((death: Deathlog, i) => {
+        const deathTime = formatTime(death[0], player)
         const vector = formatVector3(death[1], player)
-        form.button(
-            `§l${vector}\n` +
-            `${formatTime(death[0], player)}`, getDimension(death[2], player)[1], () => {
-                const body = `Cause: §l${formatDeathCause(death[3], player)}§r\n` +
-                        `Position: ${vector}\n` +
-                        `Dimension: §l${getDimension(death[2], player)[0]}§r\n` +
-                        `Time happened: §l${formatTime(death[0], player)}§r`
+        const dimension = getDimension(death[2], player)
 
-                let extra = body
-                if (death.length > 4) {
-                    extra += "\n===== Extra Information ====\n" +
-                    `${death[4]![0]}: §l${death[4]![1]}§r\n` +
-                    (death.length > 5 ? `${death[5]![0]}: §l${death[5]![1]}§r` : "")
-
-                    for (const info of death.splice(4)) {
-                        if (!Array.isArray(info)) break;
-                        extra += `${info[0]}: §l${info[1]}§r\n`
-                    }
-                }
-
-                new ActionFormHelper()
-                .title(`Death #${i+1}`)
-                .body(
-                    `Cause: §l${formatDeathCause(death[3], player)}§r\n` +
+        form.button(`§l${vector}\n${deathTime}`, dimension[1], () => {
+            const body = `Cause: §l${formatDeathCause(death[3], player)}§r\n` +
                     `Position: ${vector}\n` +
-                    `Dimension: §l${getDimension(death[2], player)[0]}§r\n` +
-                    `Time happened: §l${formatTime(death[0], player)}§r\n` +
-                    (death.length > 4 ? "\n===== Extra Information ====\n" : "") + 
-                    `${death[4]![0]}: §l${death[4]![1]}§r\n` +
-                    (death.length > 5 ? `${death[5]![0]}: §l${death[5]![1]}§r` : "")
-                )
-                .button("<Return>", "", () => deathlogs(player, targetPlayer, page, callback))
-                .button("<Print information>\n§lExtra info not included§r", "", () => {
-                    player.sendMessage(
-                        `Cause: §l${formatDeathCause(death[3], player)}§r\n` +
-                        `Position: ${vector}\n` +
-                        `Dimension: §l${getDimension(death[2], player)[0]}§r\n` +
-                        `Time happened: §l${formatTime(death[0], player)}§r`
-                    )
-                })
-                .show(player)
-            })
+                    `Dimension: §l${dimension[0]}§r\n` +
+                    `Time happened: §l${deathTime}§r`
+    
+            let extra = body
+            if (death.length > 4) {
+                extra += "\n===== Extra Information ====\n" +
+                `${death[4]![0]}: §l${death[4]![1]}§r\n` +
+                (death.length > 5 ? `${death[5]![0]}: §l${death[5]![1]}§r` : "")
+    
+                for (const info of death.splice(4)) {
+                    if (!Array.isArray(info)) break;
+                    extra += `${info[0]}: §l${info[1]}§r\n`
+                }
+            }
+                
+            new ActionFormHelper()
+            .title(`Death #${i+1}`)
+            .body(extra)
+            .button("<Return>", "", () => deathlogs(player, targetPlayer, page, callback))
+            .button("<Print information>\n§lExtra info not included§r", "", () => player.sendMessage(body))
+            .show(player)
+        })
     });
 
     form.show(player)
@@ -152,7 +141,7 @@ export function access(player: Player) {
         const filtered = world.getAllPlayers().filter(pl => pl.id !== player.id && !playerData[openEveryone ? 4 : 3].includes(pl.id))
         if (filtered.length < 1) { 
             return player.sendMessage(
-                `§l[BedrockDeathLog]§r There's no more players left to be ${openEveryone ? "added to the exception list" : "given the access"}.` +
+                `${chatPrefix} There's no more players left to be ${openEveryone ? "added to the exception list" : "given the access"}.` +
                 (playerData[openEveryone ? 4 : 3].length > 0 ? " You may remove one IF you want." : "")
             );
         }

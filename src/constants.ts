@@ -3,6 +3,7 @@ import MCNumber from "./variables/MCNumber"
 import MCRange from "./variables/MCRange"
 
 export const dataId = "bdeathlog:data"
+export const chatPrefix = "§l[BedrockDeathLog]§r"
 
 /**
  * A list of configuration variables with their label and type

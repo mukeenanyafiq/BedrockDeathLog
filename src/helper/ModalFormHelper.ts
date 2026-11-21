@@ -15,8 +15,8 @@ const allowedParts: { [key: string]: any } = {
  * Easier part values handling and text formatting
  */
 export default class ModalFormHelper {
-    form: ModalFormData
-    parts: { [key: string]: any[] }[]
+    readonly form: ModalFormData
+    readonly parts: { [key: string]: any[] }[]
     titleT: any
     submitBtn: any
 
@@ -120,7 +120,7 @@ export default class ModalFormHelper {
             for (const type in part) {
                 if (!Object.keys(allowedParts).includes(type)) continue;
                 const [text, ...values] = part[type]
-                allowedParts[type](text, ...values)
+                allowedParts[type](this.form, text, ...values)
             }
         })
 

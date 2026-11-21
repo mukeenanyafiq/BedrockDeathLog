@@ -1,11 +1,11 @@
 import * as mc from "@minecraft/server"
 import * as menu from "./form/menu"
-import { dimensions, deathTypes, defaultConfig, accessTypes, dataId } from "./constants"
+import { dimensions, deathTypes, defaultConfig, accessTypes, dataId, chatPrefix } from "./constants"
 import { Deathlog, DeathLogConfig, HandsDownJustWhatsTakenFromPlayerObject } from "./types"
 
 // Interfaces
 // original data interface
-const dataInterface = {
+export const dataInterface = {
     "id": 0,
     "name": "",
     "deaths": [],
@@ -109,11 +109,9 @@ export function getDimension(dimension: string, player: mc.Player | HandsDownJus
 }
 
 export function formatTime(timestamp: number, player: mc.Player | HandsDownJustWhatsTakenFromPlayerObject | undefined) {
-    let showMs = false
     const config = getData(player!)[0][5]
 
     if (player) {
-        if (typeof config.showMilliseconds === "boolean") { showMs = config.showMilliseconds } // use milliseconds according to player's preference
         if (config.useNumberTime) { return timestamp / 1000 } // separate milliseconds as a decimal
     }
 
@@ -205,12 +203,12 @@ mc.system.afterEvents.scriptEventReceive.subscribe(ev => {
         case "bdeathlog:resetall":
             const type = 
             ev.sourceType === "Block" ? "Block " + ev.sourceBlock : 
-            ev.sourceType === "Entity" ? "Entity " + (ev.sourceEntity instanceof mc.Player ? ev.sourceEntity?.name : ev.sourceEntity?.typeId) : 
+            ev.sourceType === "Entity" ? "Entity " + (ev.sourceEntity instanceof mc.Player ? ev.sourceEntity.name : ev.sourceEntity?.typeId) : 
             ev.sourceType === "NPCDialogue" ? "NPC " + ev.initiator?.nameTag : 
             "the server"
             
             mc.world.setDynamicProperty(dataId, "[]")
-            mc.world.getAllPlayers().forEach(pl => pl.sendMessage(`§l[BedrockDeathLog]§r All deathlogs data (including yours) were deleted by ${type}`))
+            mc.world.getAllPlayers().forEach(pl => pl.sendMessage(`${chatPrefix} All deathlogs data (including yours) were deleted by ${type}`))
         break;
 
         case "bdeathlog:debug":

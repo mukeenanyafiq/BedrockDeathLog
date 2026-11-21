@@ -13,8 +13,8 @@ export function showForm(player: Player) {
         `${player.name}\n§l[${player.id}]§r\n` +
         "==================\n"+
         `Total death: §l${playerData[2].length} death(s)§r\n` +
-        (playerData[2].length < 1 ? `You're in a really good state. Keep it up!\n\n` : "\n") +
-        `Access mode: §l${(playerData[6] === 0 ? "§2EVERYONE" : "§6ACCESS-ONLY")}§r\n` +
+        (playerData[2].length < 1 ? `You're in a really good state. Keep it up!\n\n` : "") +
+        `Access mode: §l${(playerData[6] === 0 ? "§2EVERYONE" : "§6ACCESS-ONLY")}§r\n\n` +
         "Select an action to continue"
     )
     .button("<View Deathlogs>", "textures/ui/heart_half", () => deathlogs.playerDeathlogs(player))

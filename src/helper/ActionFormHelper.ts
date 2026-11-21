@@ -1,16 +1,14 @@
 import { Player, RawMessage, system } from "@minecraft/server"
 import { ActionFormData, ActionFormResponse, FormCancelationReason } from "@minecraft/server-ui"
 
-const dtimeout = 20 * 5
-
 type ActionFormButton = [RawMessage | string, string?, ((...args: any[]) => void)?]
 
 /**
  * Easier button callback handling and text formatting
  */
 export default class ActionFormHelper {
-    form: ActionFormData;
-    buttons: ActionFormButton[];
+    readonly form: ActionFormData;
+    readonly buttons: ActionFormButton[];
     titleT: any;
     bodyT: any;
 
@@ -70,8 +68,9 @@ export default class ActionFormHelper {
                     if (force && res.cancelationReason == "UserBusy") { return system.run(runnable) }
                     return callback(res.cancelationReason)
                 }
-                
-                const handler = dthis.buttons[res.selection || -1]
+                if (typeof res.selection === "undefined") return;
+
+                const handler = dthis.buttons[res.selection]
                 
                 if (handler && handler[2]) {
                     try { handler[2](res) } 

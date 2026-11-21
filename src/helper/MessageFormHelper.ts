@@ -3,7 +3,7 @@ import { FormCancelationReason, MessageFormData, MessageFormResponse } from "@mi
 
 type MessageFormButton = [RawMessage | string, (() => void)?]
 export default class MessageFormHelper {
-    form: MessageFormData;
+    readonly form: MessageFormData;
     titleT: any;
     bodyT: any;
     button1A: MessageFormButton | any;

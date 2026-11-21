@@ -3,5 +3,12 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./scripts",
+    
+    // get rid of unnecessities
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // we dont wanna see nasty stuff in distributed production :shush:
+    "removeComments": true
   }
 }
