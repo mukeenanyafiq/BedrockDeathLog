@@ -1,12 +1,11 @@
-import { configurations, deathTypes, getData } from "../index"
+import { Player } from "@minecraft/server"
+import { deathTypes } from "../constants"
+import { getData } from "../index"
 import ActionFormHelper from "../helper/ActionFormHelper"
 import * as configuration from "./configuration"
 import * as deathlogs from "./deathlogs"
 
-/**
- * @param {Player} player
- */
-export function showForm(player) {
+export function showForm(player: Player) {
     const playerData = getData(player)[0]
     new ActionFormHelper()
     .title("BedrockDeathLog")

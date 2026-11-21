@@ -1,3 +1,13 @@
+# dev files
+.log
 node_modules/
+package-lock.json
+
+# output
+scripts/
+
+# compiled pack
 BedrockDeathLog.mcpack
 BedrockDeathLog.zip
+BedrockDeathLogBetaAPI.mcpack
+BedrockDeathLogBetaAPI.zip

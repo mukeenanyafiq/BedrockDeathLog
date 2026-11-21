@@ -1,10 +1,25 @@
 import { Player, system, RawMessage } from "@minecraft/server"
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui"
 
+const allowedParts: { [key: string]: any } = {
+    divider: (form: ModalFormData) => { form.divider() },
+    dropdown: (form: ModalFormData, label: any, items: any, opt?: any) => { form.dropdown(label, items, opt) },
+    header: (form: ModalFormData, text: any) => { form.header(text) },
+    label: (form: ModalFormData, text: any) => { form.label(text) },
+    slider: (form: ModalFormData, label: any, minVal: any, maxVal: number, opt?: any) => { form.slider(label, minVal, maxVal, opt) },
+    textField: (form: ModalFormData, label: any, placeholder: any, opt?: any) => { form.textField(label, placeholder, opt) },
+    toggle: (form: ModalFormData, label: any, opt?: any) => { form.toggle(label, opt) }
+}
+
 /**
  * Easier part values handling and text formatting
  */
 export default class ModalFormHelper {
+    form: ModalFormData
+    parts: { [key: string]: any[] }[]
+    titleT: any
+    submitBtn: any
+
     constructor() {
         this.form = new ModalFormData()
         this.parts = []
@@ -12,10 +27,9 @@ export default class ModalFormHelper {
     
     /**
      * @remarks This builder method sets the title for the modal dialog.
-     * @param {RawMessage | string} titleText 
      * @returns 
      */
-    title(titleText) {
+    title(titleText: RawMessage | string) {
         this.titleT = titleText
         return this
     }
@@ -31,48 +45,36 @@ export default class ModalFormHelper {
     
     /**
      * @remarks Adds a dropdown with choices to the form.
-     * @param {RawMessage | string} text 
-     * @param {(RawMessage | string)[]} choices 
-     * @param {number?} defaultValueIndex
-     * @param {(RawMessage | string)?} tooltip
      * @returns 
      */
-    dropdown(text, choices, defaultValueIndex, tooltip) {
+    dropdown(text: RawMessage | string, choices: (RawMessage | string)[], defaultValueIndex?: number | null, tooltip?: (RawMessage | string) | null) {
         this.parts.push({"dropdown": [text, choices, { defaultValueIndex, tooltip }]})
         return this
     }
 
     /**
      * @remarks Adds a header part into the form.
-     * @param {RawMessage | string} text 
      * @returns
      */
-    header(text) {
+    header(text: RawMessage | string) {
         this.parts.push({"header": [text]})
         return this
     }
 
     /**
      * @remarks Adds a label part into the form.
-     * @param {RawMessage | string} text 
      * @returns
      */
-    label(text) {
+    label(text: RawMessage | string) {
         this.parts.push({"label": [text]})
         return this
     }
 
     /**
      * @remarks Adds a numeric slider to the form.
-     * @param {RawMessage | string} text 
-     * @param {number} min 
-     * @param {number} max 
-     * @param {number?} valueStep
-     * @param {number?} defaultValue
-     * @param {(RawMessage | string)?} tooltip
      * @returns 
      */
-    slider(text, min, max, valueStep = 1, defaultValue, tooltip) {
+    slider(text: RawMessage | string, min: number, max: number, valueStep: number | null = 1, defaultValue?: number | null, tooltip?: (RawMessage | string) | null) {
         if (typeof valueStep !== "number" || valueStep <= 0) { valueStep = 1 }
         this.parts.push({"slider": [text, min, max, { valueStep, defaultValue, tooltip }]})
         return this
@@ -82,32 +84,25 @@ export default class ModalFormHelper {
      * @param {RawMessage | string} text 
      * @returns 
      */
-    submitButton(text) {
+    submitButton(text: RawMessage | string) {
         this.submitBtn = text
         return this
     }
 
     /**
      * @remarks Adds a textbox to the form.
-     * @param {RawMessage | string} text 
-     * @param {RawMessage | string} placeholder 
-     * @param {string?} defaultValue
-     * @param {(RawMessage | string)?} tooltip
      * @returns 
      */
-    textField(text, placeholder = "", defaultValue, tooltip) {
+    textField(text: RawMessage | string, placeholder: RawMessage | string = "", defaultValue?: string | null, tooltip?: (RawMessage | string) | null) {
         this.parts.push({"textField": [text, placeholder, { defaultValue, tooltip }]})
         return this
     }
 
     /**
      * @remarks Adds a toggle checkbox button to the form.
-     * @param {RawMessage | string} text 
-     * @param {boolean?} defaultValue
-     * @param {(RawMessage | string)?} tooltip
      * @returns 
      */
-    toggle(text, defaultValue, tooltip) {
+    toggle(text: RawMessage | string, defaultValue?: boolean | null, tooltip?: (RawMessage | string) | null) {
         this.parts.push({"toggle": [text, { defaultValue, tooltip }]})
         return this
     }
@@ -115,21 +110,17 @@ export default class ModalFormHelper {
     /**
      * @remarks
      * Creates and shows this modal popup form. Returns asynchronously when the player confirms or cancels the dialog.
-     * 
-     * @param {Player} player Player to show this dialog to
-     * @param {boolean} force Forces the form to open if the user is still busy until the user no longer busy
-     * @param {function} callback Function to run if the form were closed (UserClosed)
-     * @returns {Promise<ModalFormResponse>}
      */
-    show(player, force = false, callback = (cancelationReason) => {}) {
+    show(player: Player, force: boolean = false, callback: (cancelationReason?: string | null) => void = () => {}): Promise<ModalFormResponse> {
         // Create the form elements and parse its text
         this.form.title(this.titleT)
         this.submitBtn && this.form.submitButton(this.submitBtn)
 
         this.parts.forEach(part => {
             for (const type in part) {
+                if (!Object.keys(allowedParts).includes(type)) continue;
                 const [text, ...values] = part[type]
-                this.form[type](text, ...values)
+                allowedParts[type](text, ...values)
             }
         })
 

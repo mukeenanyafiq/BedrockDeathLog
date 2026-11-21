@@ -1,0 +1,7 @@
+{
+  // https://aka.ms/tsconfig
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./scripts",
+  }
+}

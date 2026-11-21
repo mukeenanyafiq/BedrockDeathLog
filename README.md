@@ -1,6 +1,8 @@
 # BedrockDeathLog
 > Version supported: v26.0 and above
 
+Available on [MCPEDL](https://mcpedl.com/bedrockdeathlog), [CurseForge](https://www.curseforge.com/minecraft-bedrock/addons/bedrockdeathlog), [Devstand](https://www.devstand.com/bedrockdeathlog)
+
 ![Banner](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/Banner.png)
 
 A Bedrock add-on that logs and saves your last death position in any dimension you're in!
@@ -13,13 +15,13 @@ A Bedrock add-on that logs and saves your last death position in any dimension y
 Let's start with a question first. How is this useful?
 
 - Let's say your friends died in the End City, far away from the home end gate. You can check his deathlog to find the location of where he died and immediately set off for the journey of returning his items back!
-- You can also see how he died. *(the controversy begins from this part)* Died in the void? Yeah, **no chance I'm going there.** You tell him the bad news and in the next second he starts up a new world. Neat, huh?
+- You can also see how he died. *(the controversy begins from this part)* Died in the void? Yeah, **no chance I'm going there.** You tell him the bad news and in the next second he *deletes* the world and starts up a new one. Neat, huh? (totally not based from experience)
 
 ## `BedrockDeathLog` menu
 
 ![BedrockDeathLog menu](https://github.com/mukeenanyafiq/BedrockDeathLog/blob/main/images/bedrockDeathLogMenu.png)
 
-- `<View Deathlogs>` - Opens up a list of death a player/you have experienced<br>**(does not includes death happened before the addon was installed)**
+- `<View Deathlogs>` - Opens up a list of death a player/you have experienced<br>**(does not includes deaths happened before the addon was installed)**
 - `<Configuration>` - Change your DeathLog experience into your preferences!
 - `<Death Types>` - Gives you types of deaths that might/might not happen to you
 - `<Access Settings>` - Change your deathlog access type to...<br>`Everyone` **(everyone can see your deathlog)**<br>`Only those who has access` **(certain people you added so they can see your deathlog)**<br>
@@ -33,6 +35,12 @@ Windows: `%appdata%\Minecraft Bedrock\Users\Shared\games\com.mojang\behavior_pac
 - Edit your world/Create new world and add **`BedrockDeathLog`** in the Behavior Packs section!
 
 ## For Beta API pack version:
+
+Beta-API allows you to open BedrockDeathLog menu *in chat!* Type in `!bdl` in chat! If you're an admin, you can also type `!bdladmin`
+
+But, beware; **Beta-API is an unstable version.** BedrockDeathLog can't be guaranteed to keep working the same once Minecraft updates
+
+Here are the steps you need to do to enable the pack:
 
 - You need to enable Beta APIs Experimental on your world for the pack to work.
 - Edit your world or Create a new world
@@ -56,10 +64,16 @@ For tech-nerds, there is a way to troubleshoot the add-on, if, somehow the game 
 | `/scriptevent bdeathlog:debug` | Returns player's `DeathLog` data and logs it in console<br>(Depending on the player, it would **not return** data of a player that don't give you access to their deathlog or player who added you in their exception) |
 
 # Contribution
+To set-up your development environment, make sure you have **git** & **Node.JS** installed
+1. Clone this project through `git clone`
+2. Run `npm i`
+3. If you're actively working on new changes, make a new branch by `git branch [branch-name]`
+4. Test your changes by doing `npm run build`
+
 This add-on originates from my friend that keeps dying in his world and losing his items from despawning at the cost of me and his progress ***(deleting the entire world)***<br>
 To prevent more of that, I made this add-on to save his last death position in order for me to recover his items in the nick of time
 
-Still, if you would like to contribute to this add-on and make a change in the add-on, I would gladly appreciate it!
+Still, if you would like to contribute to this add-on and make a change, I would gladly appreciate it!
 - [Bugs? Report it here!](https://github.com/mukeenanyafiq/BedrockDeathLog/issues/new)
 - [Pull request](https://github.com/mukeenanyafiq/BedrockDeathLog/pulls)
 

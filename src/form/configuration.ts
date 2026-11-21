@@ -1,21 +1,22 @@
 import { Player, world } from "@minecraft/server";
-import { configurations, dataId, getData, getWorldData } from "../index";
+import { DeathLogConfig } from "../types";
+import { dataId, configurations } from "../constants";
+import { getData, getWorldData } from "../index";
 import ModalFormHelper from "../helper/ModalFormHelper";
 import * as menu from "./menu"
 import MCRange from "../variables/MCRange";
 import MCNumber from "../variables/MCNumber";
 
-/**
- * @param {Player} player 
- * @param {{}} defaultConfig
- */
-export function showForm(player, defaultConfig) {
-    const playerData = getData(player)[0];
+export function showForm(player: Player, defaultConfig: { [key: string]: any } = {}) {
+    const [playerData, i] = getData(player);
+    if (i === -1) return;
+
+    const plConfig: any = playerData[5]
 
     const form = new ModalFormHelper()
     .title("Configure DeathLog")
-    for (const configVar in defaultConfig || playerData[5]) {
-        const tvar = defaultConfig?.[configVar] || playerData[5][configVar]
+    for (const configVar in (defaultConfig || plConfig)) {
+        const tvar = defaultConfig?.[configVar] || plConfig[configVar]
         const config = configurations[configVar]
         if (typeof tvar === "boolean") {
             form.toggle(config[0], tvar)
@@ -28,6 +29,7 @@ export function showForm(player, defaultConfig) {
     form.toggle("<Discard and Return>")
     .show(player).then(res => {
         // If the discard and return toggle are checked, return to the menu without saving
+        if (!res.formValues) { return; }
         if (res.formValues[res.formValues.length-1]) { return menu.showForm(player); }
 
         // Save the configuration
@@ -35,19 +37,20 @@ export function showForm(player, defaultConfig) {
         let [playerData, i] = getData(player)
         let changed = false
 
-        res.formValues.slice(0, -2).forEach((val, i) => {
-            const configKey = Object.keys(playerData[5])[i]
-            if (configurations[configKey][1] instanceof MCNumber && isNaN(res.formValues[i])) {
-                let cloneConfig = { ...playerData[5] }
+        res.formValues.slice(0, -2).forEach((val, i, formValues) => {
+            const plConfig: DeathLogConfig | any = playerData[5]
+            const configKey = Object.keys(plConfig)[i]
+            if (configurations[configKey][1] instanceof MCNumber && (typeof formValues[i] !== "number" || isNaN(formValues[i]))) {
+                let cloneConfig: { [key: string]: any } = { ...playerData[5] }
 
-                res.formValues.forEach((val, i) => cloneConfig[configKey] = val)
+                formValues.forEach((val, i) => cloneConfig[configKey] = val)
                 cloneConfig[configKey] = `${val} isn't a number!`
-                return configuration.showForm(player, cloneConfig);
+                return showForm(player, cloneConfig);
             }
             
-            if (playerData[5][configKey] !== val) { 
+            if (plConfig[configKey] !== val) { 
                 changed = true
-                playerData[5][configKey] = val
+                plConfig[configKey] = val
             }
         })
 

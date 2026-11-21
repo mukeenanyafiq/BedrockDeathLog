@@ -1,6 +1,33 @@
 {
+  "name": "bedrockdeathlog",
+  "version": "1.1.0",
+  "description": "Logs and saves your last death position in any dimension you're in!",
+  "keywords": [
+    "minecraft",
+    "minecraft-bedrock",
+    "minecraft-addon",
+    "minecraft-survival",
+    "minecraft-server"
+  ],
+  "homepage": "https://github.com/mukeenanyafiq/BedrockDeathLog#readme",
+  "bugs": {
+    "url": "https://github.com/mukeenanyafiq/BedrockDeathLog/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mukeenanyafiq/BedrockDeathLog.git"
+  },
+  "license": "MIT",
+  "author": "mukeenanyafiq",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
   "dependencies": {
     "@minecraft/server": "^2.7.0",
-    "@minecraft/server-ui": "^2.0.0"
+    "@minecraft/server-ui": "^2.0.0",
+    "typescript": "^7.0.2"
   }
 }
